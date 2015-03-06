@@ -7,7 +7,7 @@ array_insert(
         'nodes' => array(
             'label'           => &$GLOBALS['TL_LANG']['tl_content']['nodes'],
             'href'            => 'nodes=1&amp;popup=1',
-            'icon'            => 'system/modules/content-node/assets/img/nodes.png',
+            'icon'            => 'system/modules/nested-content/assets/img/nodes.png',
             'button_callback' => array('Netzmacht\Contao\NestedContent\Dca\Helper', 'generateButton'),
         )
     )

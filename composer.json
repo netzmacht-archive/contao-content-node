@@ -32,7 +32,7 @@
         },
         "contao": {
             "sources":{
-                "module": "system/modules/content-node"
+                "module": "system/modules/nested-content"
             }
         }
     }
