@@ -1,0 +1,39 @@
+{
+    "name":"netzmacht/contao-content-node",
+    "description":"Contao content node.",
+    "keywords":["contao", "content element", "node"],
+    "type":"contao-module",
+    "license":"LGPL-3.0+",
+    "authors":[
+        {
+            "name":"David Molineus",
+            "email":"mail@netzmacht.de",
+            "homepage":"http://www.netzmacht.de",
+            "role":"Project leader"
+        }
+    ],
+    "support":{
+        "email":"mail@netzmacht.de",
+        "issues":"https://github.com/netzmacht/contao-content-node/issues",
+        "source":"https://github.com/netzmacht/contao-content-node"
+    },
+    "require":{
+        "php":">=5.3",
+        "contao/core":">=3.1,<3.5",
+        "contao-community-alliance/meta-palettes":"~1",
+        "menatwork/contao-multicolumnwizard":"~3.2"
+    },
+    "autoload": {
+        "psr-4": { "Netzmacht\\Contao\\ContentNode\\": "src/" }
+    },
+    "extra":{
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        },
+        "contao": {
+            "sources":{
+                "module": "system/modules/content-node"
+            }
+        }
+    }
+}
