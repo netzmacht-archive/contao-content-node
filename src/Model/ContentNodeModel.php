@@ -9,10 +9,10 @@
  *
  */
 
-namespace Netzmacht\Contao\ContentNode\Model;
+namespace Netzmacht\Contao\NestedContent\Model;
 
 
-class ContentNodeModel extends \Model
+class NestedContentModel extends \Model
 {
     protected static $strTable = 'tl_content_node';
 }

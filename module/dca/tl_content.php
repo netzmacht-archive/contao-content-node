@@ -8,13 +8,13 @@ array_insert(
             'label'           => &$GLOBALS['TL_LANG']['tl_content']['nodes'],
             'href'            => 'nodes=1&amp;popup=1',
             'icon'            => 'system/modules/content-node/assets/img/nodes.png',
-            'button_callback' => array('Netzmacht\Contao\ContentNode\Dca\Helper', 'generateButton'),
+            'button_callback' => array('Netzmacht\Contao\NestedContent\Dca\Helper', 'generateButton'),
         )
     )
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['type']['save_callback'][] = array(
-    'Netzmacht\Contao\ContentNode\Dca\Helper',
+    'Netzmacht\Contao\NestedContent\Dca\Helper',
     'createNodeContainer'
 );
 
