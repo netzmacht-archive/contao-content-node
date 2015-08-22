@@ -1,5 +1,5 @@
 {
-    "name":"netzmacht/contao-nested-content",
+    "name":"netzmacht/contao-content-node",
     "description":"Contao content node.",
     "keywords":["contao", "content element", "node"],
     "type":"contao-module",
@@ -14,8 +14,8 @@
     ],
     "support":{
         "email":"mail@netzmacht.de",
-        "issues":"https://github.com/netzmacht/contao-nested-content/issues",
-        "source":"https://github.com/netzmacht/contao-nested-content"
+        "issues":"https://github.com/netzmacht/contao-content-node/issues",
+        "source":"https://github.com/netzmacht/contao-content-node"
     },
     "require":{
         "php":">=5.3",
@@ -24,7 +24,7 @@
         "menatwork/contao-multicolumnwizard":"~3.2"
     },
     "autoload": {
-        "psr-4": { "Netzmacht\\Contao\\NestedContent\\": "src/" }
+        "psr-4": { "Netzmacht\\Contao\\ContentNode\\": "src/" }
     },
     "extra":{
         "branch-alias": {
@@ -32,7 +32,7 @@
         },
         "contao": {
             "sources":{
-                "module": "system/modules/nested-content"
+                "module": "system/modules/content-node"
             }
         }
     }
