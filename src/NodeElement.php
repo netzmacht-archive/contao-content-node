@@ -12,64 +12,97 @@
 namespace Netzmacht\Contao\ContentNode;
 
 use ContentElement;
+use Netzmacht\Contao\ContentNode\Node\Factory;
+use Netzmacht\Contao\ContentNode\Node\Node;
+use Netzmacht\Contao\Toolkit\ServiceContainerTrait;
 
+/**
+ * Basic node content element. Can be used as base for own implementations.
+ *
+ * @package Netzmacht\Contao\ContentNode
+ */
 class NodeElement extends \ContentElement
 {
+    use ServiceContainerTrait;
+
+    /**
+     * The node template.
+     *
+     * @var string
+     */
     protected $strTemplate = 'ce_node';
 
+    /**
+     * Backend view template. Override it if you want to use a custom backend view template.
+     *
+     * @var string|null
+     */
+    protected $backendViewTemplate = null;
+
+    /**
+     * The Node
+     *
+     * @var Node
+     */
+    private $node;
+
+    /**
+     * @inheritDoc
+     */
+    public function __construct($objElement, $strColumn = 'main')
+    {
+        parent::__construct($objElement, $strColumn);
+
+        try {
+            /** @var Factory $factory */
+            $factory    = $this->getService('content-nodes.factory');
+            $this->node = $factory->create($this->type);
+        } catch (\Exception $e) {
+            $this->log(sprintf($e->getMessage(), $this->type), __METHOD__, TL_ERROR);
+        }
+    }
+
+    /**
+     * Get the node element.
+     *
+     * @return Node
+     */
+    protected function getNode()
+    {
+        return $this->node;
+    }
+
+    /**
+     * Generate the element.
+     *
+     * @return string
+     */
     public function generate()
     {
+        // No node type configured. Break here.
+        if (!$this->getNode()) {
+            return '';
+        }
+
         if (TL_MODE === 'BE') {
-            return $this->generateBackendView();
+            return $this->getNode()->generateBackendView($this, $this->backendViewTemplate);
         }
 
         return parent::generate();
     }
 
+    /**
+     * Compile the content element.
+     *
+     * @return void
+     */
     protected function compile()
     {
         $content  = '';
-        $elements = \ContentModel::findBy(
-            array('pid=?', 'ptable=?'),
-            array($this->id, 'tl_content_node'),
-            array('order' => 'sorting')
-        );
-
-        if ($elements) {
-            foreach ($elements as $element) {
-                $content .= $this->getContentElement($element, $this->column);
-            }
+        foreach ($this->getNode()->findChildren($this->id) as $element) {
+            $content .= $this->getContentElement($element, $this->strColumn);
         }
 
         $this->Template->content = $content;
-    }
-
-    private function generateBackendView()
-    {
-        $content  = '';
-        $callback = $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'];
-
-        if ($callback) {
-            $renderer = new $callback[0];
-            $elements = \ContentModel::findBy(
-                array('pid=?', 'ptable=?'),
-                array($this->id, 'tl_content_node')
-            );
-
-            if ($elements) {
-                foreach ($elements as $element) {
-                    $rendered = $renderer->{$callback[1]}($element->row());
-
-                    if ($rendered) {
-                        $content .= sprintf(
-                            '<div style="background: #fff;border-bottom: 4px solid #f3f3f3; padding: 6px; border-left: 6px solid #f3f3f3; border-right: 6px solid #f3f3f3;">%s</div>',
-                            $rendered
-                        );
-                    }
-                }
-            }
-
-            return $content;
-        }
     }
 }
