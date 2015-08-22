@@ -12,8 +12,8 @@
 namespace Netzmacht\Contao\ContentNode\Node;
 
 use ContaoCommunityAlliance\Translator\TranslatorInterface;
+use ContentElement;
 use ContentModel;
-use Netzmacht\Contao\ContentNode\NodeElement;
 use Netzmacht\Contao\ContentNode\View\Breadcrumb;
 use Netzmacht\Contao\Toolkit\View\BackendTemplate;
 
@@ -134,24 +134,36 @@ class BaseNode implements Node, TranslatorAware
     }
 
     /**
-     * @param NodeElement $element
-     *
-     * @return array
+     * @inheritDoc
      */
-    private function generateChildren(NodeElement $element)
+    public function findChildren($nodeId)
     {
-        $children = array();
-        $elements = ContentModel::findBy(
+        $elements = \ContentModel::findBy(
             array('pid=?', 'ptable=?'),
-            array($element->id, 'tl_content_node'),
+            array($nodeId, 'tl_content_node'),
             array('order' => 'sorting')
         );
 
-        if ($elements) {
-            /** @var ContentModel $child */
-            foreach ($elements as $child) {
-                $children[] = $this->generateChild($child);
-            }
+        if (!$elements) {
+            return $elements;
+        }
+
+        return array();
+    }
+
+    /**
+     * Generate the child elements.
+     *
+     * @param ContentElement $element The content element.
+     *
+     * @return array
+     */
+    private function generateChildren(ContentElement $element)
+    {
+        $children = array();
+        /** @var ContentModel $child */
+        foreach ($this->findChildren($element->id) as $child) {
+            $children[] = $this->generateChild($child);
         }
 
         return $children;
@@ -160,7 +172,7 @@ class BaseNode implements Node, TranslatorAware
     /**
      * @inheritDoc
      */
-    public function generateBackendView(NodeElement $element, $templateName = null)
+    public function generateBackendView(ContentElement $element, $templateName = null)
     {
         $template = new BackendTemplate($templateName ?: $this->template);
         $template

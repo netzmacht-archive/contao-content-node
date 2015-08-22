@@ -11,9 +11,8 @@
 
 namespace Netzmacht\Contao\ContentNode\Node;
 
+use ContentElement;
 use ContentModel;
-use DataContainer;
-use Netzmacht\Contao\ContentNode\NodeElement;
 use Netzmacht\Contao\ContentNode\View\Breadcrumb;
 
 /**
@@ -42,12 +41,12 @@ interface Node
     /**
      * Generate the backend view of the nested element.
      *
-     * @param NodeElement $element  The nested content element.
-     * @param string|null $template The template name. Can be used to render by a custom template.
+     * @param ContentElement $element  The nested content element.
+     * @param string|null    $template The template name. Can be used to render by a custom template.
      *
      * @return string
      */
-    public function generateBackendView(NodeElement $element, $template = null);
+    public function generateBackendView(ContentElement $element, $template = null);
 
     /**
      * Generate the header fields for the content node type.
@@ -69,4 +68,13 @@ interface Node
      * @return array
      */
     public function getChildrenTypes(array $contentElements);
+
+    /**
+     * Find children nodes.
+     *
+     * @param int $nodeId The node id.
+     *
+     * @return \Model\Collection|ContentModel[]
+     */
+    public function findChildren($nodeId);
 }
