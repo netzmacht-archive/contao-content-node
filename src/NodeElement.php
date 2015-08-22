@@ -9,7 +9,9 @@
  *
  */
 
-namespace Netzmacht\Contao\NestedContent;
+namespace Netzmacht\Contao\ContentNode;
+
+use ContentElement;
 
 class NodeElement extends \ContentElement
 {
@@ -29,7 +31,8 @@ class NodeElement extends \ContentElement
         $content  = '';
         $elements = \ContentModel::findBy(
             array('pid=?', 'ptable=?'),
-            array($this->id, 'tl_content_node')
+            array($this->id, 'tl_content_node'),
+            array('order' => 'sorting')
         );
 
         if ($elements) {
@@ -59,7 +62,7 @@ class NodeElement extends \ContentElement
 
                     if ($rendered) {
                         $content .= sprintf(
-                            '<div style="background: #fff;border-bottom: 4px solid #f3f3f3; padding: 6px">%s</div>',
+                            '<div style="background: #fff;border-bottom: 4px solid #f3f3f3; padding: 6px; border-left: 6px solid #f3f3f3; border-right: 6px solid #f3f3f3;">%s</div>',
                             $rendered
                         );
                     }
