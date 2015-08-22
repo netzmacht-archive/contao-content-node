@@ -9,10 +9,10 @@
  *
  */
 
-namespace Netzmacht\Contao\NestedContent\Dca;
+namespace Netzmacht\Contao\ContentNode\Dca;
 
 
-use Netzmacht\Contao\NestedContent\Model\NestedContentModel;
+use Netzmacht\Contao\ContentNode\Model\ContentNodeModel;
 use Netzmacht\Contao\Toolkit\Dca;
 
 class Helper
@@ -27,10 +27,10 @@ class Helper
     public function createNodeContainer($value, $dataContainer)
     {
         if (in_array($value, $this->nodeTypes)) {
-            $container = NestedContentModel::findOneBy('id', $dataContainer->id);
+            $container = ContentNodeModel::findOneBy('id', $dataContainer->id);
 
             if (!$container) {
-                $container     = new NestedContentModel();
+                $container     = new ContentNodeModel();
                 $container->id = $dataContainer->id;
                 $container->save();
             }
