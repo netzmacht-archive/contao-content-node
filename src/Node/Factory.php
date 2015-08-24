@@ -15,7 +15,14 @@ use Netzmacht\Contao\ContentNode\Event\CreateNodeEvent;
 use Netzmacht\Contao\ContentNode\Event\InitializeNodeEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-
+/**
+ * Factory creates the node types by parsing the given configuration.
+ *
+ * If also dispatches Events so it's possible to hook into the factory process.
+ *
+ * @see CreateNodeEvent::NAME
+ * @see InitializeNodeEvent::NAME
+ */
 class Factory
 {
     /**
@@ -31,6 +38,18 @@ class Factory
      * @var
      */
     private $configs;
+
+    /**
+     * Factory constructor.
+     *
+     * @param EventDispatcherInterface $dispatcher
+     * @param array                    $configs
+     */
+    public function __construct(EventDispatcherInterface $dispatcher, array $configs)
+    {
+        $this->dispatcher = $dispatcher;
+        $this->configs    = $configs;
+    }
 
     /**
      * Create a node.
@@ -52,7 +71,7 @@ class Factory
             $node = call_user_func($event->getFactory(), $event->getType(), $event->getConfig());
         } elseif ($event->getClassName()) {
             $className = $event->getClassName();
-            $node      = $className($type, $event->getConfigValue('children'));
+            $node      = new $className($type, $event->getConfigValue('children'));
         } else {
             throw new \RuntimeException(sprintf('Could not create node "%s"', $type));
         }
