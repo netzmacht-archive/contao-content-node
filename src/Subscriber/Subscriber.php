@@ -32,23 +32,32 @@ class Subscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            CreateNodeEvent::NAME     => 'setClassName',
+            CreateNodeEvent::NAME     => 'prepareForFactory',
             InitializeNodeEvent::NAME => 'setTranslator'
         );
     }
 
     /**
-     * Set the class name for the factory.
+     * Translate the config for the factory.
      *
      * @param CreateNodeEvent $event The event.
      *
      * @return void
      */
-    public function setClassName(CreateNodeEvent $event)
+    public function prepareForFactory(CreateNodeEvent $event)
     {
-        if (!$event->getClassName()) {
-            $class = $event->getConfigValue('class', 'Netzmacht\Contao\ContentNode\Node\BaseNode');
-            $event->setClassName($class);
+        $factory   = $event->getFactory();
+        $className = $event->getClassName();
+
+        if ($factory || $className) {
+            return;
+        }
+
+        if ($factory) {
+            $event->setFactory($factory);
+        } else {
+            $className = $event->getConfigValue('class', 'Netzmacht\Contao\ContentNode\Node\BaseNode');
+            $event->setClassName($className);
         }
     }
 
