@@ -191,6 +191,14 @@ class BaseNode implements Node, TranslatorAware
     /**
      * {@inheritDoc}
      */
+    public function generateChildInBackendView(array $child, $generated)
+    {
+        return $generated;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function generateHeaderFields(array $headerFields, ContentModel $model)
     {
         $label                = $this->translator->translate('id.0', 'MSC');

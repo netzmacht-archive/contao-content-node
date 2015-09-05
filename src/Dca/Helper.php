@@ -16,6 +16,7 @@ use DataContainer;
 use Netzmacht\Contao\ContentNode\Exception\AccessDeniedException;
 use Netzmacht\Contao\ContentNode\Model\ContentNodeModel;
 use Netzmacht\Contao\ContentNode\Node\Registry;
+use Netzmacht\Contao\ContentNode\View\BackendRenderer;
 use Netzmacht\Contao\ContentNode\View\Breadcrumb;
 use Netzmacht\Contao\Toolkit\Assets;
 use Netzmacht\Contao\Toolkit\Dca;
@@ -71,6 +72,14 @@ class Helper
         }
 
         Assets::addStylesheet('system/modules/content-node/assets/css/backend.css');
+
+        $callback = Dca::get('tl_content', 'list/sorting/child_record_callback');
+        if (is_array($callback)) {
+            $callback[0] = \System::importStatic($callback[0]);
+        }
+
+        $renderer = new BackendRenderer($this->registry, $callback);
+        Dca::set('tl_content', 'list/sorting/child_record_callback', $renderer);
 
         $parentType = null;
         if ($dataContainer->parentTable === 'tl_content_node') {
@@ -247,11 +256,7 @@ class Helper
             }
 
             $replacement = $breadcrumb->generate() . '<div class="tl_listing_container node-' . $current->type;
-            $buffer      = str_replace(
-                array('<div class="tl_listing_container', 'table=tl_content_node'),
-                array($replacement, 'table=tl_content'),
-                $buffer
-            );
+            $buffer      = str_replace('<div class="tl_listing_container', $replacement, $buffer);
         }
 
         return $buffer;

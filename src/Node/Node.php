@@ -51,6 +51,16 @@ interface Node
     public function generateBackendView(ContentElement $element, $template = null);
 
     /**
+     * Generate the child in the backend view.
+     *
+     * @param array  $child     The child model as array.
+     * @param string $generated The generated element.
+     *
+     * @return string
+     */
+    public function generateChildInBackendView(array $child, $generated);
+
+    /**
      * Generate the header fields for the content node type.
      *
      * This method is triggered when the header_field callback is called.
