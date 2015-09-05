@@ -111,8 +111,10 @@ class Helper
             $container = ContentNodeModel::findOneBy('id', $dataContainer->id);
 
             if (!$container) {
-                $container     = new ContentNodeModel();
-                $container->id = $dataContainer->id;
+                $container      = new ContentNodeModel();
+                $container->id  = $dataContainer->id;
+                $container->pid = $dataContainer->pid;
+
                 $container->save();
             }
         }
@@ -140,7 +142,7 @@ class Helper
 
         return sprintf(
             '<a href="%s" title="%s"%s>%s</a> ',
-            \Backend::addToUrl($href . '&amp;id=' . $row['id']),
+            \Backend::addToUrl($href . '&amp;id=' . $row['id'], true, array('act', 'mode')),
             $title,
             $attributes,
             \Image::getHtml($icon, $label)
