@@ -5,6 +5,8 @@
     <<?php echo $this->hl; ?>><?php echo $this->headline; ?></<?php echo $this->hl; ?>>
 <?php endif; ?>
 
-<?php echo $this->content; ?>
+<?php foreach ($this->children as $child): ?>
+    <?php echo $child; ?>
+<?php endforeach; ?>
 
 </div>

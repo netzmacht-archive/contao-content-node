@@ -98,11 +98,12 @@ class NodeElement extends \ContentElement
      */
     protected function compile()
     {
-        $content = '';
+        $children = array();
+
         foreach ($this->getNode()->findChildren($this->id) as $element) {
-            $content .= $this->getContentElement($element, $this->strColumn);
+            $children[$element->id] = $this->getContentElement($element, $this->strColumn);
         }
 
-        $this->Template->content = $content;
+        $this->Template->children = $children;
     }
 }
