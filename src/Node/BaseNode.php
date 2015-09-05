@@ -103,7 +103,7 @@ class BaseNode implements Node, TranslatorAware
      */
     public function buildBreadcrumb(Breadcrumb $breadcrumb, ContentModel $node)
     {
-        $label = $this->translator->translate($this->getName() . '.0', 'CONTENT_NODES', ['id' => $node->id]);
+        $label = $this->translator->translate($this->getName() . '.0', 'CTE', ['id' => $node->id]);
 
         $breadcrumb->addNode($node->id, $label, 'node-' . $node->type);
 
