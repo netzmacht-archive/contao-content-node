@@ -14,10 +14,14 @@ use Netzmacht\Contao\ContentNode\Node\Registry;
 
 global $container;
 
+$container['content-nodes.factory'] = $container->share(
+    function ($container) {
+        return new Factory($container['event-dispatcher'], $GLOBALS['TL_CONTENT_NODE']);
+    }
+);
+
 $container['content-nodes.registry'] = $container->share(
     function ($container) {
-        return new Registry(
-            new Factory($container['event-dispatcher'], $GLOBALS['TL_CONTENT_NODE'])
-        );
+        return new Registry($container['content-nodes.factory']);
     }
 );
