@@ -13,7 +13,6 @@ $GLOBALS['TL_DCA']['tl_content_node'] = array
 (
     'config' => array(
         'dataContainer' => 'Table',
-        'ptable'        => 'tl_content',
         'ctable'        => array('tl_content'),
         'sql'           => array
         (
