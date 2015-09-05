@@ -226,6 +226,7 @@ class Helper
 
         $items = array();
         $model = \ContentModel::findByPk(CURRENT_ID);
+        $current = $model;
 
         while ($model && $this->registry->hasNodeType($model->type)) {
             array_unshift($items, $model);
@@ -245,9 +246,10 @@ class Helper
                 $this->registry->getNode($item->type)->buildBreadcrumb($breadcrumb, $item);
             }
 
-            $buffer = str_replace(
+            $replacement = $breadcrumb->generate() . '<div class="tl_listing_container node-' . $current->type;
+            $buffer      = str_replace(
                 array('<div class="tl_listing_container', 'table=tl_content_node'),
-                array($breadcrumb->generate() . '<div class="tl_listing_container', 'table=tl_content'),
+                array($replacement, 'table=tl_content'),
                 $buffer
             );
         }
