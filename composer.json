@@ -24,6 +24,9 @@
     "menatwork/contao-multicolumnwizard":"~3.2",
     "netzmacht/contao-toolkit":"~1.0"
   },
+  "require-dev": {
+    "netzmacht/contao-build-tools": "~1.1"
+  },
   "autoload": {
     "psr-4": { "Netzmacht\\Contao\\ContentNode\\": "src/" }
   },
@@ -36,5 +39,7 @@
         "module": "system/modules/content-node"
       }
     }
-  }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
