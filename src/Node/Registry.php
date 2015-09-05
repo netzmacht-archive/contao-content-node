@@ -11,6 +11,8 @@
 
 namespace Netzmacht\Contao\ContentNode\Node;
 
+use Netzmacht\Contao\ContentNode\Util\Filter;
+
 /**
  * The registry provides all supported node instances.
  *
@@ -66,6 +68,25 @@ class Registry
     public function getNodeTypes()
     {
         return $this->factory->getNodeTypes();
+    }
+
+    /**
+     * Filter content elements.
+     *
+     * @param array  $elements   The content elements grouped in categories.
+     * @param string $parentType The parent type as string.
+     *
+     * @return array
+     */
+    public function filterContentElements($elements, $parentType)
+    {
+        $filter = new Filter($elements);
+
+        foreach ($this->getNodeTypes() as $type) {
+            $filter = $this->getNode($type)->filterContentElements($filter, $parentType);
+        }
+
+        return $filter->getResult();
     }
 
     /**

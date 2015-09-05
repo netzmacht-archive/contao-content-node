@@ -11,8 +11,17 @@
 
 namespace Netzmacht\Contao\ContentNode\Model;
 
-
+/**
+ * Class ContentNodeModel.
+ *
+ * @package Netzmacht\Contao\ContentNode\Model
+ */
 class ContentNodeModel extends \Model
 {
+    /**
+     * The table name.
+     *
+     * @var string
+     */
     protected static $strTable = 'tl_content_node';
 }

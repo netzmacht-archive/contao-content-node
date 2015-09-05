@@ -35,15 +35,15 @@ class Factory
     /**
      * The configuration.
      *
-     * @var
+     * @var array
      */
     private $configs;
 
     /**
      * Factory constructor.
      *
-     * @param EventDispatcherInterface $dispatcher
-     * @param array                    $configs
+     * @param EventDispatcherInterface $dispatcher The event dispatcher.
+     * @param array                    $configs    The node configs.
      */
     public function __construct(EventDispatcherInterface $dispatcher, array $configs)
     {
@@ -57,6 +57,9 @@ class Factory
      * @param string $type The node type.
      *
      * @return Node
+     *
+     * @throws \InvalidArgumentException When node type is not configured.
+     * @throws \RuntimeException         When no node type could be created.
      */
     public function create($type)
     {

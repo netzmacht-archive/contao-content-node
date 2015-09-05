@@ -1,0 +1,14 @@
+<ul class="content-node-breadcrumb">
+    <?php foreach ($this->nodes as $node): ?>
+    <li class="breadcrumb-item <?php echo $node['class']; ?>">
+        <?php if ($node['link']): ?>
+        <a href="<?php echo $node['link']; ?>">
+        <?php endif; ?>
+            <?php echo $node['label']; ?>
+            <span class="tl_gray">[<?php echo $node['id']; ?>]</span>
+        <?php if ($node['link']): ?>
+        </a>
+        <?php endif; ?>
+    </li>
+    <?php endforeach; ?>
+</ul>

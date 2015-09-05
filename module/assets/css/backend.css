@@ -1,0 +1,41 @@
+.content-node-breadcrumb {
+    margin: 15px 17px;
+    padding: 5px;
+    background: rgb(235, 253, 215);
+    border: 1px solid #c1c1c1;
+}
+
+.content-node-breadcrumb:after {
+    content: ".";
+    clear: both;
+    display: block;
+    visibility: hidden;
+    height: 0;
+}
+
+.content-node-breadcrumb .breadcrumb-item {
+    float: left;
+}
+
+.content-node-breadcrumb .breadcrumb-item:after {
+    content: "\00BB ";
+    padding-right: 5px;
+}
+
+.content-node-breadcrumb .breadcrumb-item:last-child:after {
+    display: none;
+}
+
+.content-node-wrapper {
+    background: #f0f0f0;
+    padding: 5px;
+}
+
+.content-node-wrapper + .content-node-wrapper {
+    padding-top: 0;
+}
+
+.content-node-inner {
+    background: #fff;
+    padding: 5px;
+}

@@ -14,7 +14,9 @@ namespace Netzmacht\Contao\ContentNode\Node;
 use ContaoCommunityAlliance\Translator\TranslatorInterface;
 use ContentElement;
 use ContentModel;
+use Netzmacht\Contao\ContentNode\Util\Filter;
 use Netzmacht\Contao\ContentNode\View\Breadcrumb;
+use Netzmacht\Contao\Toolkit\Dca;
 use Netzmacht\Contao\Toolkit\View\BackendTemplate;
 
 /**
@@ -39,11 +41,11 @@ class BaseNode implements Node, TranslatorAware
     private $translator;
 
     /**
-     * The template name.
+     * The template name for the backend view.
      *
      * @var string
      */
-    protected $template = 'ctn_default';
+    protected $template = 'be_ctn_default';
 
     /**
      * List of supported children types. If null all are supported.
@@ -65,7 +67,9 @@ class BaseNode implements Node, TranslatorAware
     }
 
     /**
-     * @param TranslatorInterface $translator
+     * Set the translator.
+     *
+     * @param TranslatorInterface $translator The translator.
      *
      * @return $this
      */
@@ -87,7 +91,7 @@ class BaseNode implements Node, TranslatorAware
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getName()
     {
@@ -95,13 +99,13 @@ class BaseNode implements Node, TranslatorAware
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function buildBreadcrumb(Breadcrumb $breadcrumb)
+    public function buildBreadcrumb(Breadcrumb $breadcrumb, ContentModel $node)
     {
-        $label = $this->translator->translate($this->getName(), 'CONTENT_NODES');
+        $label = $this->translator->translate($this->getName() . '.0', 'CONTENT_NODES', ['id' => $node->id]);
 
-        $breadcrumb->addNode($label);
+        $breadcrumb->addNode($node->id, $label, 'node-' . $node->type);
 
         return $this;
     }
@@ -109,17 +113,19 @@ class BaseNode implements Node, TranslatorAware
     /**
      * Generate a child.
      *
-     * @param ContentModel $model The model
+     * @param ContentModel $model The model.
      *
      * @return string
      */
     private function generateChild(ContentModel $model)
     {
-        if (!isset ($GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'])) {
+        $dca = &Dca::load('tl_content');
+
+        if (!isset($dca['list']['sorting']['child_record_callback'])) {
             return '';
         }
 
-        $callback = $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'];
+        $callback = $dca['list']['sorting']['child_record_callback'];
 
         if (is_array($callback)) {
             $callback[0] = new $callback[0];
@@ -134,7 +140,7 @@ class BaseNode implements Node, TranslatorAware
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function findChildren($nodeId)
     {
@@ -144,7 +150,7 @@ class BaseNode implements Node, TranslatorAware
             array('order' => 'sorting')
         );
 
-        if (!$elements) {
+        if ($elements) {
             return $elements;
         }
 
@@ -170,7 +176,7 @@ class BaseNode implements Node, TranslatorAware
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function generateBackendView(ContentElement $element, $templateName = null)
     {
@@ -183,24 +189,30 @@ class BaseNode implements Node, TranslatorAware
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function generateHeaderFields(array $headerFields, ContentModel $model)
     {
-        $headerFields['type'] = $this->translator->translate('CTE' . $model->type, 'MSC');
+        $label                = $this->translator->translate('id.0', 'MSC');
+        $headerFields[$label] = $model->id;
+
+        foreach (array('type', 'invisible', 'start', 'stop') as $field) {
+            $label                = $this->translator->translate($field . '.0', 'tl_content');
+            $headerFields[$label] = $this->translator->translate($model->$field, 'CTE');
+        }
 
         return $headerFields;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function getChildrenTypes(array $contentElements)
+    public function filterContentElements(Filter $filter, $parentType)
     {
-        if ($this->supportedChildren === null) {
-            return $contentElements;
+        if ($this->supportedChildren === null || !$parentType || $parentType !== $this->getName()) {
+            return $filter;
         }
 
-        return array_intersect($this->supportedChildren, $this->supportedChildren);
+        return $filter->in($this->supportedChildren);
     }
 }

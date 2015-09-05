@@ -18,7 +18,7 @@ use Netzmacht\Contao\Toolkit\ServiceContainerTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class Subscriber
+ * Class Subscriber.
  *
  * @package Netzmacht\Contao\ContentNode\Subscriber
  */
@@ -27,7 +27,7 @@ class Subscriber implements EventSubscriberInterface
     use ServiceContainerTrait;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public static function getSubscribedEvents()
     {
@@ -49,13 +49,7 @@ class Subscriber implements EventSubscriberInterface
         $factory   = $event->getFactory();
         $className = $event->getClassName();
 
-        if ($factory || $className) {
-            return;
-        }
-
-        if ($factory) {
-            $event->setFactory($factory);
-        } else {
+        if (!$factory && !$className) {
             $className = $event->getConfigValue('class', 'Netzmacht\Contao\ContentNode\Node\BaseNode');
             $event->setClassName($className);
         }

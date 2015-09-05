@@ -13,9 +13,10 @@ namespace Netzmacht\Contao\ContentNode\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-
 /**
+ * Class CreateNodeEvent.
  *
+ * @package Netzmacht\Contao\ContentNode\Event
  */
 class CreateNodeEvent extends Event
 {
@@ -52,8 +53,8 @@ class CreateNodeEvent extends Event
     /**
      * CreateNodeEvent constructor.
      *
-     * @param $type
-     * @param $config
+     * @param string $type   The type name.
+     * @param array  $config The type config.
      */
     public function __construct($type, array $config)
     {

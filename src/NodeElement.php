@@ -12,8 +12,8 @@
 namespace Netzmacht\Contao\ContentNode;
 
 use ContentElement;
-use Netzmacht\Contao\ContentNode\Node\Factory;
 use Netzmacht\Contao\ContentNode\Node\Node;
+use Netzmacht\Contao\ContentNode\Node\Registry;
 use Netzmacht\Contao\Toolkit\ServiceContainerTrait;
 
 /**
@@ -40,23 +40,23 @@ class NodeElement extends \ContentElement
     protected $backendViewTemplate = null;
 
     /**
-     * The Node
+     * The Node type.
      *
      * @var Node
      */
     private $node;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function __construct($objElement, $strColumn = 'main')
     {
         parent::__construct($objElement, $strColumn);
 
         try {
-            /** @var Factory $factory */
-            $factory    = $this->getService('content-nodes.factory');
-            $this->node = $factory->create($this->type);
+            /** @var Registry $registry */
+            $registry   = $this->getService('content-nodes.registry');
+            $this->node = $registry->getNode($this->type);
         } catch (\Exception $e) {
             $this->log(sprintf($e->getMessage(), $this->type), __METHOD__, TL_ERROR);
         }
@@ -98,7 +98,7 @@ class NodeElement extends \ContentElement
      */
     protected function compile()
     {
-        $content  = '';
+        $content = '';
         foreach ($this->getNode()->findChildren($this->id) as $element) {
             $content .= $this->getContentElement($element, $this->strColumn);
         }

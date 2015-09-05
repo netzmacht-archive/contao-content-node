@@ -13,6 +13,7 @@ namespace Netzmacht\Contao\ContentNode\Node;
 
 use ContentElement;
 use ContentModel;
+use Netzmacht\Contao\ContentNode\Util\Filter;
 use Netzmacht\Contao\ContentNode\View\Breadcrumb;
 
 /**
@@ -32,11 +33,12 @@ interface Node
     /**
      * Add the node to the breadcrumb. The breadcrumb is used to visualize multiple nested nodes.
      *
-     * @param Breadcrumb $breadcrumb The breadcrumb.
+     * @param Breadcrumb   $breadcrumb The breadcrumb.
+     * @param ContentModel $node       The model for the node.
      *
      * @return $this
      */
-    public function buildBreadcrumb(Breadcrumb $breadcrumb);
+    public function buildBreadcrumb(Breadcrumb $breadcrumb, ContentModel $node);
 
     /**
      * Generate the backend view of the nested element.
@@ -53,8 +55,8 @@ interface Node
      *
      * This method is triggered when the header_field callback is called.
      *
-     * @param array         $headerFields  The header fields.
-     * @param ContentModel  $model         The content model.
+     * @param array        $headerFields The header fields.
+     * @param ContentModel $model        The content model.
      *
      * @return array
      */
@@ -63,11 +65,12 @@ interface Node
     /**
      * Get supported child types. Useful to limit to a specific type of elements.
      *
-     * @param array $contentElements All available elements.
+     * @param Filter $contentElements All available elements grouped by category.
+     * @param string $parentType      The parent type.
      *
-     * @return array
+     * @return Filter
      */
-    public function getChildrenTypes(array $contentElements);
+    public function filterContentElements(Filter $contentElements, $parentType);
 
     /**
      * Find children nodes.

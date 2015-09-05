@@ -1,0 +1,7 @@
+<?php foreach ($this->children as $child): ?>
+<div class="content-node-wrapper">
+    <div class="content-node-inner">
+    <?php echo $child; ?>
+    </div>
+</div>
+<?php endforeach; ?>

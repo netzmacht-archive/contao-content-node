@@ -41,7 +41,7 @@ class InitializeNodeEvent extends Event
      * InitializeNodeEvent constructor.
      *
      * @param Node  $node   The node.
-     * @param array $config The node config
+     * @param array $config The node config.
      */
     public function __construct($node, array $config)
     {
