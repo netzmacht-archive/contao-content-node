@@ -46,7 +46,7 @@ class BaseNode implements Node, TranslatorAware
      *
      * @var string
      */
-    protected $template = 'be_ctn_default';
+    protected $template = 'be_node_base';
 
     /**
      * List of supported children types. If null all are supported.
