@@ -98,6 +98,11 @@ class Operations
         $return = '';
 
         foreach ($dca as $name => $button) {
+            // Cut mode would create empty child list. Disable so far.
+            if ($name === 'cut') {
+                continue;
+            }
+
             $button = is_array($button) ? $button : array($button);
             $id     = specialchars(rawurldecode($row['id']));
 
@@ -174,28 +179,28 @@ class Operations
      */
     private function generateMoveButton($row)
     {
-//        $clipboard   = \Session::getInstance()->get('CLIPBOARD');
-//        $isClipboard = !empty($clipboard[$this->table]);
-//
-//        // Paste buttons
-//        if ($isClipboard) {
-//            $clipboard = $clipboard[$this->table];
-//
-//            if (\Input::get('mode') == 'cut' && $this->isChildOf($row, $clipboard['id'])) {
-//                return \Image::getHtml('pasteafter_.gif', $this->translator->translate('pasteafter.0', $this->table));
-//            }
-//
-//            $url = \Backend::addToUrl(
-//                'act=' .$clipboard['mode'] . '&amp;mode=1&amp;pid=' . $row['id'] .'&amp;id=' . $clipboard['id']
-//            );
-//
-//            return sprintf(
-//               ' <a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a>',
-//               $url,
-//               specialchars(sprintf($this->translator->translate('pasteafter.1', $this->table), $row['id'])),
-//               \Image::getHtml('pasteafter.gif', $this->translator->translate('pasteafter.0', $this->table))
-//           );
-//        }
+        $clipboard   = \Session::getInstance()->get('CLIPBOARD');
+        $isClipboard = !empty($clipboard[$this->table]);
+
+        // Paste buttons
+        if ($isClipboard) {
+            $clipboard = $clipboard[$this->table];
+
+            if (\Input::get('mode') == 'cut' && $this->isChildOf($row, $clipboard['id'])) {
+                return \Image::getHtml('pasteafter_.gif', $this->translator->translate('pasteafter.0', $this->table));
+            }
+
+            $url = \Backend::addToUrl(
+                'act=' .$clipboard['mode'] . '&amp;mode=1&amp;pid=' . $row['id'] .'&amp;id=' . $clipboard['id']
+            );
+
+            return sprintf(
+               ' <a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a>',
+               $url,
+               specialchars(sprintf($this->translator->translate('pasteafter.1', $this->table), $row['id'])),
+               \Image::getHtml('pasteafter.gif', $this->translator->translate('pasteafter.0', $this->table))
+           );
+        }
 
         return '';
     }
