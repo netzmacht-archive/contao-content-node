@@ -173,9 +173,4 @@ class Helper
 
         return $fields;
     }
-
-    public function addPasteIntoButton()
-    {
-        var_dump(func_get_args());
-    }
 }
