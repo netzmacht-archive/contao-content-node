@@ -9,11 +9,16 @@
  *
  */
 
+use Netzmacht\Contao\ContentNode\Dca\RedirectHelper;
+
 $GLOBALS['TL_DCA']['tl_content_node'] = array
 (
     'config' => array(
-        'dataContainer' => 'Table',
-        'ctable'        => array('tl_content'),
+        'dataContainer'   => 'Table',
+        'ctable'          => array('tl_content'),
+        'onload_callback' => array(
+            RedirectHelper::callback('redirect'),
+        ),
         'sql'           => array
         (
             'keys' => array
@@ -21,7 +26,7 @@ $GLOBALS['TL_DCA']['tl_content_node'] = array
                 'id'  => 'primary',
                 'pid' => 'index'
             )
-        )
+        ),
     ),
     'fields' => array
     (
