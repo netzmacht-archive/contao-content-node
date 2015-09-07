@@ -27,7 +27,7 @@ $GLOBALS['TL_MODELS']['tl_content_node'] = 'Netzmacht\Contao\ContentNode\Model\C
 /*
  * Hooks
  */
-$GLOBALS['TL_HOOKS']['parseBackendTemplate'][] = array('Netzmacht\Contao\ContentNode\Dca\Helper', 'injectBreadcrumb');
+$GLOBALS['TL_HOOKS']['parseBackendTemplate'][] = array('Netzmacht\Contao\ContentNode\Dca\BreadcrumbHelper', 'injectBreadcrumb');
 
 
 /*
