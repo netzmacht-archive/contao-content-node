@@ -51,7 +51,7 @@ class BreadcrumbHelper
     {
         return $template === 'be_main'
         && \Input::get('table') === 'tl_content'
-        && !\Input::get('act')
+        && (!\Input::get('act') || \Input::get('act') === 'paste')
         && \Input::get('nodes');
     }
 
