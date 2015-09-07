@@ -11,13 +11,11 @@
 
 namespace Netzmacht\Contao\ContentNode\Dca;
 
-use Contao\ContentModel;
 use DataContainer;
 use Netzmacht\Contao\ContentNode\Exception\AccessDeniedException;
 use Netzmacht\Contao\ContentNode\Model\ContentNodeModel;
 use Netzmacht\Contao\ContentNode\Node\Registry;
 use Netzmacht\Contao\ContentNode\View\BackendRenderer;
-use Netzmacht\Contao\ContentNode\View\Breadcrumb;
 use Netzmacht\Contao\Toolkit\Assets;
 use Netzmacht\Contao\Toolkit\Dca;
 use Netzmacht\Contao\Toolkit\ServiceContainerTrait;
@@ -170,11 +168,10 @@ class Helper
     {
         $model = \ContentModel::findByPk($dataContainer->id);
 
-        if ($model && $this->registry->hasNodeType($model->type)) {
+        if ($model instanceof \ContentModel && $this->registry->hasNodeType($model->type)) {
             return $this->registry->getNode($model->type)->generateHeaderFields($fields, $model);
         }
 
         return $fields;
     }
-
 }
