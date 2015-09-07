@@ -18,6 +18,7 @@ use Netzmacht\Contao\ContentNode\Util\Filter;
 use Netzmacht\Contao\ContentNode\View\Breadcrumb;
 use Netzmacht\Contao\ContentNode\View\Operations;
 use Netzmacht\Contao\Toolkit\Dca;
+use Netzmacht\Contao\Toolkit\Dca\Definition;
 use Netzmacht\Contao\Toolkit\View\BackendTemplate;
 
 /**
@@ -25,7 +26,7 @@ use Netzmacht\Contao\Toolkit\View\BackendTemplate;
  *
  * @package Netzmacht\Contao\ContentNode\Node
  */
-class BaseNode implements Node, TranslatorAware
+class BaseNode implements Node, TranslatorAware, DefinitionAware
 {
     /**
      * The type name.
@@ -56,6 +57,13 @@ class BaseNode implements Node, TranslatorAware
     private $supportedChildren;
 
     /**
+     * The dca definition.
+     *
+     * @var Definition
+     */
+    private $definition;
+
+    /**
      * BaseNode constructor.
      *
      * @param string     $name              The name of the element.
@@ -68,11 +76,7 @@ class BaseNode implements Node, TranslatorAware
     }
 
     /**
-     * Set the translator.
-     *
-     * @param TranslatorInterface $translator The translator.
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function setTranslator(TranslatorInterface $translator)
     {
@@ -82,13 +86,29 @@ class BaseNode implements Node, TranslatorAware
     }
 
     /**
-     * Get translator.
-     *
-     * @return TranslatorInterface
+     * {@inheritdoc}
      */
     public function getTranslator()
     {
         return $this->translator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefinition()
+    {
+        return $this->definition;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefinition(Definition $definition)
+    {
+        $this->definition = $definition;
+
+        return $this;
     }
 
     /**
@@ -120,13 +140,10 @@ class BaseNode implements Node, TranslatorAware
      */
     private function generateChild(ContentModel $model)
     {
-        $dca = &Dca::load('tl_content');
-
-        if (!isset($dca['list']['sorting']['child_record_callback'])) {
+        $callback = $this->definition->get('list/sorting/child_record_callback');
+        if (!$callback) {
             return '';
         }
-
-        $callback = $dca['list']['sorting']['child_record_callback'];
 
         if (is_array($callback)) {
             $callback[0] = new $callback[0];
@@ -177,7 +194,7 @@ class BaseNode implements Node, TranslatorAware
         $template = new BackendTemplate($templateName ?: $this->template);
         $template
             ->set('element', $element)
-            ->set('operations', new Operations('tl_content', $this->translator))
+            ->set('operations', new Operations($this->definition, $this->translator))
             ->set('children', $children)
             ->set('elements', $generated);
 

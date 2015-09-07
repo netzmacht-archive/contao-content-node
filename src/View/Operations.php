@@ -13,6 +13,7 @@ namespace Netzmacht\Contao\ContentNode\View;
 
 use ContaoCommunityAlliance\Translator\TranslatorInterface;
 use Netzmacht\Contao\Toolkit\Dca;
+use Netzmacht\Contao\Toolkit\Dca\Definition;
 
 /**
  * Class operations generate the operations of a content node.
@@ -22,13 +23,6 @@ use Netzmacht\Contao\Toolkit\Dca;
 class Operations
 {
     /**
-     * The table name.
-     *
-     * @var string
-     */
-    private $table;
-
-    /**
      * The translator.
      *
      * @var TranslatorInterface
@@ -36,14 +30,21 @@ class Operations
     private $translator;
 
     /**
+     * The dca definition.
+     *
+     * @var Definition
+     */
+    private $definition;
+
+    /**
      * Construct.
      *
-     * @param string              $tableName  The table name.
+     * @param Definition          $definition The definition.
      * @param TranslatorInterface $translator The translator.
      */
-    public function __construct($tableName, TranslatorInterface $translator)
+    public function __construct(Definition $definition, TranslatorInterface $translator)
     {
-        $this->table       = $tableName;
+        $this->definition = $definition;
         $this->translator = $translator;
     }
 
@@ -73,7 +74,7 @@ class Operations
                 $title,
                 $button['icon'],
                 $attributes,
-                $this->table,
+                $this->definition->getName(),
                 array(), // Root ids
                 null,
                 false,
@@ -94,7 +95,7 @@ class Operations
      */
     private function generateListOperations($row)
     {
-        $dca    = (array) Dca::get($this->table, 'list/operations');
+        $dca    = $this->definition->get('list/operations');
         $return = '';
 
         foreach ($dca as $name => $button) {
@@ -127,7 +128,11 @@ class Operations
                 $attributes .= sprintf(
                     ' onclick="Backend.openModalIframe({\'width\':768,\'title\':\'%s\',\'url\':this.href});return false"',
                     specialchars(
-                        str_replace("'", "\\'", $this->translator->translate('show', $this->table, array($row['id'])))
+                        str_replace(
+                            "'",
+                            "\\'",
+                            $this->translator->translate('show', $this->definition->getName(), array($row['id']))
+                        )
                     )
                 );
             }
@@ -180,14 +185,14 @@ class Operations
     private function generateMoveButton($row)
     {
         $clipboard   = \Session::getInstance()->get('CLIPBOARD');
-        $isClipboard = !empty($clipboard[$this->table]);
+        $isClipboard = !empty($clipboard[$this->definition->getName()]);
 
         // Paste buttons
         if ($isClipboard) {
-            $clipboard = $clipboard[$this->table];
+            $clipboard = $clipboard[$this->definition->getName()];
 
             if (\Input::get('mode') == 'cut' && $this->isChildOf($row, $clipboard['id'])) {
-                return \Image::getHtml('pasteafter_.gif', $this->translator->translate('pasteafter.0', $this->table));
+                return \Image::getHtml('pasteafter_.gif', $this->translator->translate('pasteafter.0', $this->definition->getName()));
             }
 
             $url = \Backend::addToUrl(
@@ -197,8 +202,8 @@ class Operations
             return sprintf(
                ' <a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a>',
                $url,
-               specialchars(sprintf($this->translator->translate('pasteafter.1', $this->table), $row['id'])),
-               \Image::getHtml('pasteafter.gif', $this->translator->translate('pasteafter.0', $this->table))
+               specialchars(sprintf($this->translator->translate('pasteafter.1', $this->definition->getName()), $row['id'])),
+               \Image::getHtml('pasteafter.gif', $this->translator->translate('pasteafter.0', $this->definition->getName()))
            );
         }
 

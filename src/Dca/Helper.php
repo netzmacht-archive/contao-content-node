@@ -18,6 +18,7 @@ use Netzmacht\Contao\ContentNode\Node\Registry;
 use Netzmacht\Contao\ContentNode\View\BackendRenderer;
 use Netzmacht\Contao\Toolkit\Assets;
 use Netzmacht\Contao\Toolkit\Dca;
+use Netzmacht\Contao\Toolkit\Dca\Definition;
 use Netzmacht\Contao\Toolkit\ServiceContainerTrait;
 
 /**
@@ -37,11 +38,19 @@ class Helper
     private $registry;
 
     /**
+     * The dca definition for tl_content.
+     *
+     * @var Definition
+     */
+    private $definition;
+
+    /**
      * Construct.
      */
     public function __construct()
     {
-        $this->registry = $this->getService('content-nodes.registry');
+        $this->registry   = $this->getService('content-nodes.registry');
+        $this->definition = $this->getServiceContainer()->getDcaManager()->get('tl_content');
     }
 
     /**
@@ -71,7 +80,7 @@ class Helper
 
         Assets::addStylesheet('system/modules/content-node/assets/css/backend.css');
 
-        $callback = Dca::get('tl_content', 'list/sorting/child_record_callback');
+        $callback = $this->definition->get('list/sorting/child_record_callback');
         if (is_array($callback)) {
             $callback[0] = \System::importStatic($callback[0]);
         }
@@ -90,6 +99,7 @@ class Helper
 
         try {
             $restriction = new ContentElementAccess(
+                $this->definition,
                 $this->registry,
                 $this->getService('database.connection'),
                 $this->getService('session'),

@@ -19,6 +19,7 @@ use Netzmacht\Contao\ContentNode\Node\Node;
 use Netzmacht\Contao\ContentNode\Node\Registry;
 use Netzmacht\Contao\ContentNode\Util\ArrayUtil;
 use Netzmacht\Contao\Toolkit\Dca;
+use Netzmacht\Contao\Toolkit\Dca\Definition;
 
 /**
  * Class ContentElementAccess restricts the access to the available types.
@@ -61,19 +62,33 @@ class ContentElementAccess
     private $input;
 
     /**
+     * The dca definition.
+     *
+     * @var Definition
+     */
+    private $definition;
+
+    /**
      * ContentElementAccess constructor.
      *
-     * @param Registry $registry The node registry.
-     * @param Database $database The database connection.
-     * @param Session  $session  The session.
-     * @param Input    $input    The input.
+     * @param Definition $definition The dca definition.
+     * @param Registry   $registry   The node registry.
+     * @param Database   $database   The database connection.
+     * @param Session    $session    The session.
+     * @param Input      $input      The input.
      */
-    public function __construct(Registry $registry, Database $database, Session $session, Input $input)
-    {
-        $this->registry = $registry;
-        $this->database = $database;
-        $this->session  = $session;
-        $this->input    = $input;
+    public function __construct(
+        Definition $definition,
+        Registry $registry,
+        Database $database,
+        Session $session,
+        Input $input
+    ) {
+        $this->definition = $definition;
+        $this->registry   = $registry;
+        $this->database   = $database;
+        $this->session    = $session;
+        $this->input      = $input;
     }
 
     /**
@@ -83,13 +98,13 @@ class ContentElementAccess
      */
     private function closeDataContainer()
     {
-        $config =& Dca::get('tl_content', 'config');
+        $config =& $this->definition->get('config');
 
         $config['closed']       = true;
         $config['notEditable']  = true;
         $config['notDeletable'] = true;
 
-        $operations =& Dca::get('tl_content', 'list/global_operations');
+        $operations =& $this->definition->get('list/global_operations');
         unset($operations['all']);
     }
 
@@ -104,8 +119,8 @@ class ContentElementAccess
     {
         $default = key(reset($allowedElements));
 
-        Dca::set('tl_content', 'fields/type/default', $default);
-        Dca::set('tl_content', 'palettes/default', Dca::get('tl_content', 'palettes/' . $default));
+        $this->definition->set('fiedls/type/default', $default);
+        $this->definition->set('palettes/default', $this->definition->get('palettes/' . $default));
     }
 
     /**
@@ -209,7 +224,7 @@ class ContentElementAccess
 
         if (empty($allowedElements)) {
             $this->closeDataContainer();
-        } elseif (!in_array(Dca::get('tl_content', 'fields/type/default'), $allowedElements)) {
+        } elseif (!in_array($this->definition->get('fields/type/default'), $allowedElements)) {
             $this->setDefaults($allowedElements);
         }
 

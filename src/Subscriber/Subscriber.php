@@ -13,6 +13,7 @@ namespace Netzmacht\Contao\ContentNode\Subscriber;
 
 use Netzmacht\Contao\ContentNode\Event\CreateNodeEvent;
 use Netzmacht\Contao\ContentNode\Event\InitializeNodeEvent;
+use Netzmacht\Contao\ContentNode\Node\DefinitionAware;
 use Netzmacht\Contao\ContentNode\Node\TranslatorAware;
 use Netzmacht\Contao\Toolkit\ServiceContainerTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -33,7 +34,7 @@ class Subscriber implements EventSubscriberInterface
     {
         return array(
             CreateNodeEvent::NAME     => 'prepareForFactory',
-            InitializeNodeEvent::NAME => 'setTranslator'
+            InitializeNodeEvent::NAME => 'injectDependencies'
         );
     }
 
@@ -56,18 +57,22 @@ class Subscriber implements EventSubscriberInterface
     }
 
     /**
-     * Set the translator if the node supports the translator aware interface.
+     * Inject the dependencies.
      *
      * @param InitializeNodeEvent $event The event.
      *
      * @return void
      */
-    public function setTranslator(InitializeNodeEvent $event)
+    public function injectDependencies(InitializeNodeEvent $event)
     {
         $node = $event->getNode();
 
         if ($node instanceof TranslatorAware && !$node->getTranslator()) {
             $node->setTranslator($this->getService('translator'));
+        }
+
+        if ($node instanceof DefinitionAware && !$node->getDefinition()) {
+            $node->setDefinition($this->getServiceContainer()->getDcaManager()->get('tl_content'));
         }
     }
 }
