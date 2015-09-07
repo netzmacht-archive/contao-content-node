@@ -159,34 +159,18 @@ class BaseNode implements Node, TranslatorAware
     }
 
     /**
-     * Generate the child elements.
-     *
-     * @param ContentModel[] $children The child element models.
-     *
-     * @return array
-     */
-    private function generateChildren(array $children)
-    {
-        $generated = array();
-
-        foreach ($children as $child) {
-            $generated[$child->id] = $this->generateChild($child);
-        }
-
-        return $generated;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function generateBackendView(ContentElement $element, $templateName = null)
     {
         $collection = $this->findChildren($element->id);
         $children   = array();
+        $generated  = array();
 
         if ($collection) {
             foreach ($collection as $child) {
-                $children[$child->id] = $child;
+                $children[$child->id]  = $child;
+                $generated[$child->id] = $this->generateChild($child);
             }
         }
 
@@ -195,7 +179,7 @@ class BaseNode implements Node, TranslatorAware
             ->set('element', $element)
             ->set('operations', new Operations('tl_content', $this->translator))
             ->set('children', $children)
-            ->set('elements', $this->generateChildren($children));
+            ->set('elements', $generated);
 
         return $template->parse();
     }
