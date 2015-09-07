@@ -14,7 +14,8 @@ use Netzmacht\Contao\ContentNode\Dca\Helper;
 /*
  * Config
  */
-$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = Helper::callback('initialize');
+$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][]              = Helper::callback('initialize');
+$GLOBALS['TL_DCA']['tl_content']['list']['sorting']['paste_button_callback'] = Helper::callback('addPasteIntoButton');
 
 /*
  * Palettes

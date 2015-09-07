@@ -1,0 +1,5 @@
+<?php if ($this->operations): ?>
+<div class="content-node-operations">
+    <?php echo $this->operations->generate($this->element->row()); ?>
+</div>
+<?php endif; ?>

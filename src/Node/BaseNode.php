@@ -16,6 +16,7 @@ use ContentElement;
 use ContentModel;
 use Netzmacht\Contao\ContentNode\Util\Filter;
 use Netzmacht\Contao\ContentNode\View\Breadcrumb;
+use Netzmacht\Contao\ContentNode\View\Operations;
 use Netzmacht\Contao\Toolkit\Dca;
 use Netzmacht\Contao\Toolkit\View\BackendTemplate;
 
@@ -160,19 +161,19 @@ class BaseNode implements Node, TranslatorAware
     /**
      * Generate the child elements.
      *
-     * @param ContentElement $element The content element.
+     * @param ContentModel[] $children The child element models.
      *
      * @return array
      */
-    private function generateChildren(ContentElement $element)
+    private function generateChildren(array $children)
     {
-        $children = array();
-        /** @var ContentModel $child */
-        foreach ($this->findChildren($element->id) as $child) {
-            $children[] = $this->generateChild($child);
+        $generated = array();
+
+        foreach ($children as $child) {
+            $generated[$child->id] = $this->generateChild($child);
         }
 
-        return $children;
+        return $generated;
     }
 
     /**
@@ -180,10 +181,21 @@ class BaseNode implements Node, TranslatorAware
      */
     public function generateBackendView(ContentElement $element, $templateName = null)
     {
+        $collection = $this->findChildren($element->id);
+        $children   = array();
+
+        if ($collection) {
+            foreach ($collection as $child) {
+                $children[$child->id] = $child;
+            }
+        }
+
         $template = new BackendTemplate($templateName ?: $this->template);
         $template
             ->set('element', $element)
-            ->set('children', $this->generateChildren($element));
+            ->set('operations', new Operations('tl_content', $this->translator))
+            ->set('children', $children)
+            ->set('elements', $this->generateChildren($children));
 
         return $template->parse();
     }

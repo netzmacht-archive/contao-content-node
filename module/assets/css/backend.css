@@ -39,3 +39,7 @@
     background: #fff;
     padding: 5px;
 }
+
+.content-node-operations {
+    float: right;
+}

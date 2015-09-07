@@ -1,7 +1,8 @@
-<?php foreach ($this->children as $child): ?>
-<div class="content-node-wrapper">
+<?php foreach ($this->children as $id => $child): ?>
+<div class="content-node-wrapper node-<?= $this->element->type ?>">
     <div class="content-node-inner">
-    <?php echo $child; ?>
+        <?php echo $this->insert('be_node_operations', array('operations' => $this->operations, 'element' => $child)); ?>
+        <?php echo $this->elements[$id]; ?>
     </div>
 </div>
 <?php endforeach; ?>

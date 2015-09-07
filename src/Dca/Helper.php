@@ -159,19 +159,23 @@ class Helper
     /**
      * Generate the header fields.
      *
-     * @param array         $fields        The header fields.
-     * @param DataContainer $dataContainer The data container.
+     * @param array $fields The header fields.
      *
      * @return array
      */
-    public function generateHeaderFields($fields, $dataContainer)
+    public function generateHeaderFields($fields)
     {
-        $model = \ContentModel::findByPk($dataContainer->id);
+        $model = \ContentModel::findByPk(CURRENT_ID);
 
         if ($model instanceof \ContentModel && $this->registry->hasNodeType($model->type)) {
             return $this->registry->getNode($model->type)->generateHeaderFields($fields, $model);
         }
 
         return $fields;
+    }
+
+    public function addPasteIntoButton()
+    {
+        var_dump(func_get_args());
     }
 }
