@@ -16,7 +16,6 @@ use Netzmacht\Contao\ContentNode\Exception\AccessDeniedException;
 use Netzmacht\Contao\ContentNode\Model\ContentNodeModel;
 use Netzmacht\Contao\ContentNode\Node\Registry;
 use Netzmacht\Contao\ContentNode\View\BackendRenderer;
-use Netzmacht\Contao\Toolkit\Dca;
 use Netzmacht\Contao\Toolkit\Dca\Definition;
 use Netzmacht\Contao\Toolkit\ServiceContainerTrait;
 
@@ -86,8 +85,9 @@ class Helper
             $callback[0] = \System::importStatic($callback[0]);
         }
 
-        $renderer = new BackendRenderer($this->registry, $callback);
-        Dca::set('tl_content', 'list/sorting/child_record_callback', $renderer);
+        $renderer   = new BackendRenderer($this->registry, $callback);
+        $definition = $this->getServiceContainer()->getDcaManager()->get('tl_content');
+        $definition->set('list/sorting/child_record_callback', $renderer);
 
         $parentType = null;
         if ($dataContainer->parentTable === 'tl_content_node') {
