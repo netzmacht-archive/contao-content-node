@@ -16,7 +16,6 @@ use Netzmacht\Contao\ContentNode\Exception\AccessDeniedException;
 use Netzmacht\Contao\ContentNode\Model\ContentNodeModel;
 use Netzmacht\Contao\ContentNode\Node\Registry;
 use Netzmacht\Contao\ContentNode\View\BackendRenderer;
-use Netzmacht\Contao\Toolkit\Assets;
 use Netzmacht\Contao\Toolkit\Dca;
 use Netzmacht\Contao\Toolkit\Dca\Definition;
 use Netzmacht\Contao\Toolkit\ServiceContainerTrait;
@@ -78,7 +77,9 @@ class Helper
             return;
         }
 
-        Assets::addStylesheet('system/modules/content-node/assets/css/backend.css');
+        $this->getServiceContainer()
+            ->getAssetsManager()
+            ->addStylesheet('system/modules/content-node/assets/css/backend.css');
 
         $callback = $this->definition->get('list/sorting/child_record_callback');
         if (is_array($callback)) {
