@@ -47,7 +47,7 @@ class Helper
      */
     public function __construct()
     {
-        $this->registry   = $this->getService('content-nodes.registry');
+        $this->registry   = $this->getServiceContainer()->getService('content-nodes.registry');
         $this->definition = $this->getServiceContainer()->getDcaManager()->get('tl_content');
     }
 
@@ -102,9 +102,9 @@ class Helper
             $restriction = new ContentElementAccess(
                 $this->definition,
                 $this->registry,
-                $this->getService('database.connection'),
-                $this->getService('session'),
-                $this->getService('input')
+                $this->getServiceContainer()->getDatabaseConnection(),
+                $this->getServiceContainer()->getSession(),
+                $this->getServiceContainer()->getInput()
             );
 
             $restriction->restrict($dataContainer->id, $parentType);

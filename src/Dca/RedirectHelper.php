@@ -35,7 +35,7 @@ class RedirectHelper
      */
     public function __construct()
     {
-        $this->input = $this->getService('input');
+        $this->input = $this->getServiceContainer()->getInput();
     }
 
     /**

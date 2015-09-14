@@ -55,7 +55,7 @@ class NodeElement extends \ContentElement
 
         try {
             /** @var Registry $registry */
-            $registry   = $this->getService('content-nodes.registry');
+            $registry   = $this->getServiceContainer()->getService('content-nodes.registry');
             $this->node = $registry->getNode($this->type);
         } catch (\Exception $e) {
             $this->log(sprintf($e->getMessage(), $this->type), __METHOD__, TL_ERROR);

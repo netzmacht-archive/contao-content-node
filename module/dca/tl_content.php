@@ -10,6 +10,7 @@
  */
 
 use Netzmacht\Contao\ContentNode\Dca\Helper;
+use Netzmacht\Contao\ContentNode\Dca\PermissionCallback;
 
 /*
  * Config
@@ -48,21 +49,27 @@ array_insert(
  */
 $GLOBALS['TL_DCA']['tl_content']['fields']['type']['save_callback'][] = Helper::callback('createNodeContainer');
 
-
 /*
  * Customize config when being in the nodes mode.
  */
 if (\Input::get('nodes')) {
     $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_content_node';
 
-    // TODO: Add our own permission checking!
-    $index = array_search(
-        array('tl_content', 'checkPermission'),
-        $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback']
+    $mapping = array(
+        'tl_article'         => 'tl_content',
+        'tl_news'            => 'tl_content_news',
+        'tl_calendar_events' => 'tl_content_calendar'
     );
 
-    if ($index) {
-        unset($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][$index]);
+    foreach ($mapping as $table => $callback) {
+        $index = array_search(
+            array($callback, 'checkPermission'),
+            $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback']
+        );
+
+        if ($index) {
+            $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][$index] = new PermissionCallback($table);
+        }
     }
 
     $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['headerFields']    = array();

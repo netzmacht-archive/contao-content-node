@@ -37,7 +37,7 @@ class BreadcrumbHelper
      */
     public function __construct()
     {
-        $this->registry = $this->getService('content-nodes.registry');
+        $this->registry = $this->getServiceContainer()->getService('content-nodes.registry');
     }
 
     /**

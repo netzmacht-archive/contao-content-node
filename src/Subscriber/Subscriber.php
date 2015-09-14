@@ -68,7 +68,7 @@ class Subscriber implements EventSubscriberInterface
         $node = $event->getNode();
 
         if ($node instanceof TranslatorAware && !$node->getTranslator()) {
-            $node->setTranslator($this->getService('translator'));
+            $node->setTranslator($this->getServiceContainer()->getTranslator());
         }
 
         if ($node instanceof DefinitionAware && !$node->getDefinition()) {
